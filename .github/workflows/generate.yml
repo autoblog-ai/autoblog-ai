@@ -1,11 +1,14 @@
 name: Auto-Generate
+
 on:
   schedule:
     - cron: '0 5 * * *'
   workflow_dispatch:
+
 permissions:
   contents: write
   pages: write
+
 jobs:
   generate:
     runs-on: ubuntu-latest
