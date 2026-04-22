@@ -5,8 +5,9 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT = path.resolve(__dirname, '..');
+const BASE_PATH = '/autoblog-ai';  // ← Для GitHub Pages
 
-// Список тем для статей
+// БАЗА ТЕМ (расширяй сколько хочешь)
 const TOPICS = {
   programming: [
     "Как начать программировать с нуля в 2025",
@@ -48,7 +49,7 @@ function createSlug(title) {
     .replace(/^-|-$/g, '');
 }
 
-// Генерация статьи через GitHub Models (бесплатно)
+// Генерация статьи через GitHub Models
 async function generateArticle(topic, category) {
   console.log(`📝 Генерация: ${topic}`);
   
@@ -103,7 +104,6 @@ function markdownToHtml(content, topic, category) {
     .replace(/\n\n/g, '</p><p>')
     .replace(/\n/g, '<br>');
   
-  // Добавляем обёртку
   return `<!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -129,6 +129,8 @@ function markdownToHtml(content, topic, category) {
     li { margin: 8px 0; }
     .meta { color: #95a5a6; font-size: 0.9em; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #ecf0f1; }
     .category { display: inline-block; background: #3498db; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8em; margin-right: 10px; }
+    .back-link { margin-top: 30px; text-align: center; }
+    .back-link a { color: #667eea; text-decoration: none; }
     footer { text-align: center; padding: 40px; color: #95a5a6; font-size: 0.9em; border-top: 1px solid #ecf0f1; margin-top: 40px; }
     @media (max-width: 768px) { article { padding: 20px; } header h1 { font-size: 1.8em; } }
   </style>
@@ -146,6 +148,9 @@ function markdownToHtml(content, topic, category) {
         <span>📖 ${Math.ceil(content.split(' ').length / 200)} мин чтения</span>
       </div>
       ${html}
+      <div class="back-link">
+        <a href="${BASE_PATH}/">← На главную</a>
+      </div>
     </article>
   </div>
   <footer>
@@ -230,7 +235,7 @@ async function main() {
   
   for (const [category, articles] of Object.entries(articlesByCategory)) {
     const articlesList = articles.map(a => 
-      `<li><a href="${a.url}">${a.topic}</a> <small>${a.date}</small></li>`
+      `<li><a href="${BASE_PATH}${a.url}">${a.topic}</a> <small>${a.date}</small></li>`
     ).join('');
     
     categoriesHtml += `
@@ -254,7 +259,7 @@ async function main() {
     .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
     header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 20px; text-align: center; border-radius: 0 0 20px 20px; }
     header h1 { font-size: 2.5em; margin-bottom: 10px; }
-    .stats { background: white; padding: 20px; border-radius: 12px; margin: 30px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); text-align: center; }
+    .stats { background: white; padding: 20px; border-radius: 12px; margin: 30px 0; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
     .stats-number { font-size: 2em; font-weight: bold; color: #667eea; }
     .category-section { background: white; padding: 25px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
     .category-section h2 { color: #667eea; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #ecf0f1; }
@@ -262,7 +267,7 @@ async function main() {
     li { padding: 10px 0; border-bottom: 1px solid #ecf0f1; }
     li:last-child { border-bottom: none; }
     a { color: #333; text-decoration: none; }
-    a:hover { color: #667eea; }
+    a:hover { color: #667eea; text-decoration: underline; }
     small { color: #95a5a6; font-size: 0.85em; }
     footer { text-align: center; padding: 40px; color: #95a5a6; font-size: 0.9em; margin-top: 30px; }
     @media (max-width: 768px) { header h1 { font-size: 1.8em; } .category-section { padding: 15px; } }
@@ -282,7 +287,8 @@ async function main() {
     ${categoriesHtml}
   </div>
   <footer>
-    <p>Сайт автоматически обновляется каждый день с помощью AI</p>
+    <p>🤖 Сайт автоматически обновляется каждый день с помощью AI</p>
+    <p><small>AutoBlog AI — программирование, Python, JavaScript, IT</small></p>
   </footer>
 </body>
 </html>`;
